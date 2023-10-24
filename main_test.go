@@ -25,7 +25,7 @@ func TestDownloadVideo(t *testing.T) {
 	}()
 
 	// Ejecuta la función main
-	go main()
+	main()
 
 	// Lee la salida del programa
 	w.Close()
