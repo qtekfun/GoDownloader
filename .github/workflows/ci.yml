@@ -1,0 +1,29 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout código fuente
+      uses: actions/checkout@v2
+
+    - name: Configurar entorno Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.21.3
+
+    - name: Download dependencies
+      run: go mod download
+
+    - name: Run tests
+      run: go test -v ./...
+
+    - name: Build and test main app
+      run: go build -o GoDownloader && ./GoDownloader
+
+    - name: Save Results
+      if: success()
+      run: echo "CI was succesful"
