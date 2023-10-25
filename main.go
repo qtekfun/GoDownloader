@@ -9,22 +9,38 @@ import (
 	"github.com/kkdai/youtube/v2"
 )
 
-func main() {
+type internalData struct {
+	videoID string
+	outputFile string
+}
+
+func parseArgs() *internalData {
+	// Define los flags
 	videoID := flag.String("id", "", "Youtube video's ID")
 	outputFile := flag.String("output file name", "video.mp4", "Output filename")
 
-	// Parse flags
+	// Parsea los flags desde la línea de comandos
 	flag.Parse()
-	
+
+	// Verifica si el ID del video es proporcionado
 	if *videoID == "" {
 		fmt.Println("Error: missing video ID.")
 		flag.PrintDefaults()
 		os.Exit(1)
 	}
 
+	return &internalData{
+		videoID:    *videoID,
+		outputFile: *outputFile,
+	}
+}
+
+func main() {
+	data := parseArgs()
+
 	client := youtube.Client{}
 
-	video, err := client.GetVideo(*videoID)
+	video, err := client.GetVideo(data.videoID)
 	if err != nil {
 		panic(err)
 	}
@@ -36,7 +52,7 @@ func main() {
 	}
 	defer stream.Close()
 
-	file, err := os.Create(*outputFile)
+	file, err := os.Create(data.outputFile)
 	if err != nil {
 		panic(err)
 	}
