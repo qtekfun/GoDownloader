@@ -1,6 +1,8 @@
 package main
 
 import (
+	"flag"
+	"fmt"
 	"io"
 	"os"
 
@@ -8,12 +10,21 @@ import (
 )
 
 func main() {
-	videoID := "QlZNGcVfeF0&pp"
+	videoID := flag.String("id", "", "Youtube video's ID")
+	outputFile := flag.String("output file name", "video.mp4", "Output filename")
 
-	// Crea una instancia de YouTube video downloader
+	// Parse flags
+	flag.Parse()
+	
+	if *videoID == "" {
+		fmt.Println("Error: missing video ID.")
+		flag.PrintDefaults()
+		os.Exit(1)
+	}
+
 	client := youtube.Client{}
 
-	video, err := client.GetVideo(videoID)
+	video, err := client.GetVideo(*videoID)
 	if err != nil {
 		panic(err)
 	}
@@ -25,7 +36,7 @@ func main() {
 	}
 	defer stream.Close()
 
-	file, err := os.Create("video.mp4")
+	file, err := os.Create(*outputFile)
 	if err != nil {
 		panic(err)
 	}

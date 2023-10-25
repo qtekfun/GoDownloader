@@ -24,6 +24,17 @@ func TestDownloadVideo(t *testing.T) {
 		os.Stderr = originalStderr
 	}()
 
+	// Guarda el valor original de os.Args para restaurarlo más tarde
+	originalArgs := os.Args
+
+	// Modifica temporalmente os.Args para simular argumentos de línea de comandos
+	os.Args = []string{"main", "-id=QlZNGcVfeF0&pp"}
+
+	// Restaura os.Args al final de la prueba
+	defer func() {
+		os.Args = originalArgs
+	}()
+
 	// Ejecuta la función main
 	main()
 
