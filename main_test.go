@@ -53,10 +53,10 @@ func TestDownloadVideo(t *testing.T) {
 	}
 
 	// Verifica si el archivo se ha creado correctamente
-	if _, err := os.Stat("video.mp4"); os.IsNotExist(err) {
-		t.Errorf("El archivo video.mp4 no se ha creado correctamente.")
+	if _, err := os.Stat("audio.mp4"); os.IsNotExist(err) {
+		t.Errorf("El archivo audio.mp4 no se ha creado correctamente.")
 	} else {
 		// Elimina el archivo después de la prueba
-		os.Remove("video.mp4")
+		os.Remove("audio.mp4")
 	}
 }

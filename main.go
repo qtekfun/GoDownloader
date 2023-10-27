@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strings"
 
 	"github.com/kkdai/youtube/v2"
 )
@@ -17,7 +18,7 @@ type internalData struct {
 func parseArgs() *internalData {
 	// Define args
 	videoID := flag.String("id", "", "Youtube video's ID")
-	outputFile := flag.String("output file name", "video.mp4", "Output filename")
+	outputFile := flag.String("output file name", "audio.mp4", "Output filename")
 
 	// Parse args
 	flag.Parse()
@@ -49,7 +50,21 @@ func main() {
 	video, err := client.GetVideo(data.videoID)
 	checkError(err)
 
-	stream, _, err := client.GetStream(video, &video.Formats.WithAudioChannels()[0])
+	var selectedFormat *youtube.Format
+	// Encuentra el formato de audio MP3
+	for _, format := range video.Formats.WithAudioChannels() {
+		if strings.Contains(format.MimeType, "audio/mp4") {
+			selectedFormat = &format
+			break
+		}
+	}
+
+	if selectedFormat == nil {
+		fmt.Println("Error: No audio mp4 found for this ID.")
+		os.Exit(1)
+	}
+
+	stream, _, err := client.GetStream(video, selectedFormat)
 	checkError(err)
 	defer stream.Close()
 
