@@ -1,7 +1,7 @@
 package main
 
 import (
-	"io/ioutil"
+	"io"
 	"os"
 	"testing"
 )
@@ -40,7 +40,7 @@ func TestDownloadVideo(t *testing.T) {
 
 	// Lee la salida del programa
 	w.Close()
-	out, _ := ioutil.ReadAll(r)
+	out, _ := io.ReadAll(r)
 
 	// Restaura stdout y stderr
 	os.Stdout = originalStdout
